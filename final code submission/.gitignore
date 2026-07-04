@@ -1,0 +1,36 @@
+# Virtual environments
+.venv/
+.venv*/
+venv/
+ENV/
+env/
+backend/.venv312/
+
+# Python cache and temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Node.js
+node_modules/
+dist/
+.eslintcache
+frontend/node_modules/
+frontend/dist/
+
+# Environment variables
+.env
+.env.*
+backend/.env
+
+# Local database (we can exclude or include - usually exclude, but let's exclude the root hrms.db)
+hrms.db
+
+# OS files
+.DS_Store
+Thumbs.db

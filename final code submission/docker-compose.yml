@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: hrms_db
+    environment:
+      POSTGRES_DB: hrms_db
+      POSTGRES_USER: hrms_user
+      POSTGRES_PASSWORD: hrms_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - hrms_network
+
+  backend:
+    build: ./backend
+    container_name: hrms_backend
+    environment:
+      - DATABASE_URL=postgresql://hrms_user:hrms_password@db:5432/hrms_db
+      - SECRET_KEY=your-super-secret-jwt-key-change-in-production-min-32-chars
+      - ALGORITHM=HS256
+      - UPLOAD_DIR=/app/uploads
+      - CORS_ORIGINS=["http://localhost:5173", "http://localhost:3000"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - uploads_data:/app/uploads
+    depends_on:
+      - db
+    networks:
+      - hrms_network
+
+  frontend:
+    build: ./frontend
+    container_name: hrms_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - hrms_network
+
+volumes:
+  postgres_data:
+  uploads_data:
+
+networks:
+  hrms_network:
+    driver: bridge
